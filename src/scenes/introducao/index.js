@@ -17,8 +17,10 @@ class Introducao extends BaseScene {
       slideCount: SlideCount.INTRODUCAO,
       slide: props.slide,
       hasNextUnit: true,
-      hasPreviousUnit: false
+      hasPreviousUnit: false,
+      slideProgress: []
     }
+    this.getUnitState()
   }
 
   renderSlide = () => {

@@ -21,9 +21,17 @@ import Background from '../images/component/background.svg'
 const mainCenterStyle = { backgroundColor: '#ffffff', backgroundImage: 'url(' + Background + ')', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundPosition: 'inherit' }
 
 class BaseScene extends Error {
+
+    getUnitState = () => {
+        AVAMECService.getIfNextUnitExist(this.state.id, this.callBackIfNextUnitExists)
+        AVAMECService.getIfPreviousUnitExist(this.state.id, this.callBackIfPreviousUnitExists)
+        this.getUnitProgress()
+    }
+
     onChangeSlide = newSlide => {
-        console.log('onChangeSlide')
-        SlideService.saveSlide(newSlide)
+        console.log("onChangeSlide")
+        this.saveUnitAndSlideProgress(newSlide)
+        SlideService.saveSlide(this.state.id, newSlide)
         URLService.updateSlide(newSlide)
         this.setState({
             slide: newSlide
@@ -32,7 +40,6 @@ class BaseScene extends Error {
     }
 
     onChangeUnit = next => {
-        console.log('onChangeUnit')
         if(next){
             this.nextUnit()
         } else {
@@ -41,30 +48,56 @@ class BaseScene extends Error {
     }
 
     nextUnit = () => {
-        console.log('nextUnit')
-        console.log(this.state.id)
         if(this.state.hasNextUnit){
             AVAMECService.getNextUnit(this.state.id)
         }
     }
 
     previousUnit = () => {
-        console.log('previousUnit')
-        console.log(this.state.id)
         if(this.state.hasPreviousUnit){
             AVAMECService.getPreviousUnit(this.state.id)
         }
     }
 
-    getUnitState = () => {
-        console.log('getUnitState')
-        AVAMECService.getIfNextUnitExist(this.state.id, this.callBackIfNextUnitExists)
-        AVAMECService.getIfPreviousUnitExist(this.state.id, this.callBackIfPreviousUnitExists)
+    getUnitProgress = () => {
+        SlideService.getSlideProgress(this.state.id, this.getUnitProgressCallback)
+    }
+
+    getUnitProgressCallback = response => {
+        let slideProgress = []
+        SlideService.closeGetSlideProgress(this.getUnitProgressCallback)
+        if(response.detail.status === 200){
+            slideProgress = JSON.parse(response.detail.data[0].valor)
+        } else if(response.detail.status === 412) {
+            for(let count = 1; count <= this.state.slideCount; count++) {
+                slideProgress.push({
+                    slide: count,
+                    viewed: count == this.state.slide
+                })
+            }
+            SlideService.firstSaveSlideProgress(this.state.id, slideProgress)
+        
+            AVAMECService.saveUnitProgress(this.state.id, (1 / this.state.slideCount) * 100)
+        }
+
+        this.setState({
+            slideProgress: slideProgress
+        })
+    }
+
+    saveUnitAndSlideProgress = viewedSlide => {
+        const updatedSlideProgress = SlideService.saveSlideProgress(this.state.id, viewedSlide, this.state.slideProgress)
+
+        const countViewed = this.state.slideProgress.filter(item => item.viewed).length
+        
+        AVAMECService.saveUnitProgress(this.state.id, (countViewed / this.state.slideCount) * 100)
+
+        this.setState({
+            slideProgress: updatedSlideProgress
+        })
     }
 
     callBackIfNextUnitExists = event => {
-        console.log('NextUnitExists')
-        console.log(event)
         try {
             if(!HttpStatus.isError(event.status)) {
                 this.setState({
@@ -79,8 +112,6 @@ class BaseScene extends Error {
     }
 
     callBackIfPreviousUnitExists = event => {
-        console.log('PreviousUnitExists')
-        console.log(event)
         try {
             if(!HttpStatus.isError(event.status)) {
                 this.setState({
@@ -154,6 +185,7 @@ class BaseScene extends Error {
                     onChangeUnit={this.onChangeUnit} 
                     onChangeSlide={this.onChangeSlide} 
                     slideCount={this.state.slideCount}
+                    slideProgress={this.state.slideProgress}
                 />      
             </Fragment>
         )

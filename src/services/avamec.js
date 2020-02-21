@@ -135,6 +135,7 @@ class AvaMecApiServices {
     }
 
     saveGenericData = (id, data) => {
+        console.log(data)
         if (id !== undefined) {
             try {
                 this.api.registrarDadosGenericos(id, JSON.stringify(data))
@@ -172,6 +173,10 @@ class AvaMecApiServices {
 
     closeSaveActivity = callback => {
         window.removeEventListener(AvamecEvent.REGISTER_ACTIVITY, callback, false)
+    }
+
+    saveLastPage = (unit, slide) => {
+        this.api.registrarUltimaPaginaAcessada(unit, "index.html?unit=".concat(unit).concat("&slide=").concat(slide))
     }
 }
 

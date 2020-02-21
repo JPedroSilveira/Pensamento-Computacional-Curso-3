@@ -712,7 +712,7 @@
         "identificador": "consideracoes_finais",
         "nome": "Considerações Finais",
         "descricao": "",
-        "permitePorcentagem": "false",
+        "permitePorcentagem": "true",
         "identificadorPai": "",
         "topicos": [],
         "atividades": []

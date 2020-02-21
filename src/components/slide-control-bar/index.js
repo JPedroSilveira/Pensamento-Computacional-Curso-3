@@ -1,7 +1,6 @@
 import React from 'react'
 import GenericButton from '../generic-button'
 import Image from '../image'
-import SlideService from '../../services/slide'
 import ForwardFilled from '../../images/component/forward-filled.png'
 import BackFilled from '../../images/component/back-filled.png'
 
@@ -15,7 +14,6 @@ import BackFilled from '../../images/component/back-filled.png'
 
 class SlideControlBar extends React.Component {
     changeSlide = newSlide => {
-        SlideService.saveSlide(newSlide.toString())
         this.props.onChangeSlide(newSlide.toString())
     }
 

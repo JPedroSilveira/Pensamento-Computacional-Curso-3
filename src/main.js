@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 import Url from './services/url'
 import UnitService from './services/unit'
-import './sass/main.css'
+import './sass/main.min.css'
 
 class Main extends React.Component {
   constructor() {

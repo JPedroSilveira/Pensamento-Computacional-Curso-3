@@ -26,8 +26,10 @@ class Micromundo_IV extends BaseScene {
       slideCount: SlideCount.MICROMUNDO_IV,
       slide: props.slide,
       hasNextUnit: true,
-      hasPreviousUnit: true
+      hasPreviousUnit: true,
+      slideProgress: []
     }
+    this.getUnitState()
   }
 
   renderSlide = () => {
