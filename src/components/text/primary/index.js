@@ -31,9 +31,9 @@ class TextPrimary extends React.Component {
 
     render(){
         return (
-            <span className={this.className}>
+            <div className={this.className}>
                 {this.props.children}
-            </span>
+            </div>
         )
     }
 }

@@ -1,7 +1,6 @@
 import React from 'react'
 import ContentBox from '../../../components/content-box'
 import PrimaryText from '../../../components/text/primary'
-import EmptySpace from '../../../components/empty-space'
 import TextBNCC from '../../../components/text/bncc'
 import SubtitleBar from '../../../components/subtitle-bar'
 import Activities from '../../../services/activities'

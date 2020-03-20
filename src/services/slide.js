@@ -3,9 +3,6 @@ import GenericDataId from '../constants/generic-data-id'
 
 class Slide {    
     saveSlide = (unit, slide) => {
-        console.log("saveSlide")
-        console.log(this.getSlideId(unit))
-        console.log(slide)
         Avamec.saveGenericData(this.getSlideId(unit), slide)
         Avamec.saveLastPage(unit, slide)
     }
@@ -38,7 +35,7 @@ class Slide {
         dados de slides atualizados
     */
     saveSlideProgress = (unit, slide, savedData) => {
-        let slideData = savedData.filter(data => data.slide == slide)
+        let slideData = savedData.filter(data => data.slide === slide)
 
         if (slideData.length === 1) {
             slideData[0].viewed = true

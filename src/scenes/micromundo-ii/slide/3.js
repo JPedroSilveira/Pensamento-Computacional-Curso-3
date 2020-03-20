@@ -2,8 +2,6 @@ import React from 'react'
 import ContentBox from '../../../components/content-box'
 import PrimaryText from '../../../components/text/primary'
 import SubtitleBar from '../../../components/subtitle-bar'
-import Bold from '../../../components/text/bold'
-import EmptySpace from '../../../components/empty-space'
 import Subtitle from '../../../components/text/subtitle'
 
 import FamiliaSVG from '../../../images/content/micromundo-ii/slide-3.svg'

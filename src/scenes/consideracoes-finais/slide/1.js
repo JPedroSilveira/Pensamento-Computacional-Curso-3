@@ -2,7 +2,6 @@ import React from 'react'
 import SlideCount from '../../../constants/slide-count'
 import ContentBox from '../../../components/content-box'
 import PrimaryText from '../../../components/text/primary'
-import EmptySpace from '../../../components/empty-space'
 import ImageSlide from '../../../components/image-slide'
 
 import FalaUmSVG from '../../../images/content/consideracoes-finais/6-fala1.svg'

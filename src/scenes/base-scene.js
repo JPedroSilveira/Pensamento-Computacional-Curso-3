@@ -29,7 +29,6 @@ class BaseScene extends Error {
     }
 
     onChangeSlide = newSlide => {
-        console.log("onChangeSlide")
         this.saveUnitAndSlideProgress(newSlide)
         SlideService.saveSlide(this.state.id, newSlide)
         URLService.updateSlide(newSlide)
@@ -72,7 +71,7 @@ class BaseScene extends Error {
             for(let count = 1; count <= this.state.slideCount; count++) {
                 slideProgress.push({
                     slide: count,
-                    viewed: count == this.state.slide
+                    viewed: count === this.state.slide
                 })
             }
             SlideService.firstSaveSlideProgress(this.state.id, slideProgress)
