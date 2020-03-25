@@ -20,22 +20,24 @@ class TopMenu extends React.Component {
 
     onScroll = (event) => {
         if(this.props.hide) {
-            //Distancia entre a posicao da rolagem e o topo
-            const scrollTop = event.target.scrollingElement.scrollTop
+            if (event.target.scrollingElement) {
+                //Distancia entre a posicao da rolagem e o topo
+                const scrollTop = event.target.scrollingElement.scrollTop
 
-            //Tamanho da pagina exibida ao usuario
-            const clientHeight = event.target.scrollingElement.clientHeight
-        
-            if (scrollTop > clientHeight*0.25) {
-                this.setState({
-                    SlideInfoClass: 'slide-info'
-                })
-            } else {
-                this.setState({
-                    SlideInfoClass: 'slide-info-hidden'
-                })
+                //Tamanho da pagina exibida ao usuario
+                const clientHeight = event.target.scrollingElement.clientHeight
+            
+                if (scrollTop > clientHeight*0.25) {
+                    this.setState({
+                        SlideInfoClass: 'slide-info'
+                    })
+                } else {
+                    this.setState({
+                        SlideInfoClass: 'slide-info-hidden'
+                    })
+                }
             }
-            } 
+        } 
     }
 
     render() {

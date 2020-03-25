@@ -11,7 +11,9 @@ function startApp() {
     window.location = "../index.html?unit=".concat(state.unit).concat("&slide=").concat(slide)
     try{
         api.registrarUltimaPaginaAcessada(state.unit, "index.html?unit=".concat(state.unit).concat("&slide=").concat(slide))
-    } catch{}
+    } catch(e) {
+        console.error("Erro ao atualizar página acessada na API.")
+    }
 
 }
 
