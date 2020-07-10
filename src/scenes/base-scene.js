@@ -29,7 +29,7 @@ class BaseScene extends Error {
     }
 
     onChangeSlide = newSlide => {
-        this.saveUnitAndSlideProgress(newSlide, this.state.slideProgres)
+        this.saveUnitAndSlideProgress(newSlide, this.state.slideProgress)
         SlideService.saveSlide(this.state.id, newSlide)
         URLService.updateSlide(newSlide)
         this.setState({
@@ -72,18 +72,20 @@ class BaseScene extends Error {
             const data = response.detail.data
             const unitKey = SlideService.getSlideProgressId(this.state.id)
             unitData = data.filter(unit => unit.chave === unitKey)
+            console.log("BUG AQUI")
             console.log(response)
             console.log(unitData)
+            console.log("----------")
         }
         
         if (unitData.length === 1) {
             slideProgress = JSON.parse(unitData[0].valor)
-            slideProgress = JSON.parse(response.detail.data[0].valor)
+            this.saveUnitAndSlideProgress(this.state.slide, slideProgress)
         } else {
             for(let count = 1; count <= this.state.slideCount; count++) {
                 slideProgress.push({
                     slide: count,
-                    viewed: String(count) === this.state.slide
+                    viewed: String(count) === (this.state.slide)
                 })
             }
             SlideService.firstSaveSlideProgress(this.state.id, slideProgress)
@@ -107,7 +109,9 @@ class BaseScene extends Error {
     }
 
     saveUnitAndSlideProgress = (viewedSlide, slideProgress) => {
-        const updatedSlideProgress = SlideService.saveSlideProgress(this.state.id, viewedSlide, this.state.slideProgress)
+        console.log("saveUnitAndSlideProgress")
+        console.log(slideProgress)
+        const updatedSlideProgress = SlideService.saveSlideProgress(this.state.id, viewedSlide, slideProgress)
 
         const countViewed = updatedSlideProgress.filter(item => item.viewed).length
         
