@@ -20,16 +20,30 @@ function startApp() {
 function getSavedUnitCallback(info) {
     window.removeEventListener('evObtemDadosGenericos', getSavedUnitCallback, false)
 
-    if(info.detail.status != 200 || state.unit != info.detail.data[0].valor){
-        api.registrarDadosGenericos('unit', state.unit)
-    } 
+    console.log("----------------------")
+    console.log("State Unit:")
+    console.log(state.unit)
+    console.log("Valor API")
+    console.log(info.detail.data[0].valor)
+
+    if (info.detail.status !== 200) {
+        const data = info.detail.data
+        const unitData = data.filter(unit => unit.chave === 'unit')
+        console.log("unit data")
+        console.log(unitData)
+        if (unitData.length === 1 && state.unit !== unitData[0].valor) {
+            api.registrarDadosGenericos('unit', state.unit)
+        }
+    }
+
+    console.log("----------------------")
 
     getSavedSlide()
 }
 
 function getSavedUnit() {
     window.addEventListener('evObtemDadosGenericos', getSavedUnitCallback, false)
-    try{
+    try {
         api.obterDadosGenericos('unit')
     } catch {
         throw Error('Erro ao buscar unidade salva do AVAMEC')
@@ -38,11 +52,20 @@ function getSavedUnit() {
 
 function getSavedSlideCallback(info) {
     window.removeEventListener('evObtemDadosGenericos', this.getSavedSlideCallback, false)
+    
+    let slideData = null
+
     if(info.detail.status === 200){
-        state.slide = info.detail.data[0].valor
+        const data = info.detail.data
+        slideData = data.filter(unit => unit.chave === getSlideId())
+    }
+    
+    if (slideData && slideData.length === 1) {
+        state.slide = slideData[0].valor
     } else {
         api.registrarDadosGenericos(getSlideId(), state.slide)
     }
+
     startApp()
 }
 

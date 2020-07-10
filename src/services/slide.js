@@ -35,14 +35,22 @@ class Slide {
         dados de slides atualizados
     */
     saveSlideProgress = (unit, slide, savedData) => {
-        let slideData = savedData.filter(data => data.slide === slide)
+        let indexCurrentSlide = savedData.findIndex(data => String(data.slide) === slide)
 
-        if (slideData.length === 1) {
-            slideData[0].viewed = true
+        console.log("-----------------------------------------")
+        console.log("saveSlideProgress")
+        console.log("-----------------------------------------")
+        console.log(slide)
+
+        if (indexCurrentSlide >= 0) {
+            savedData[indexCurrentSlide].viewed = true
 
             Avamec.saveGenericData(this.getSlideProgressId(unit), savedData)
         }
 
+        console.log(savedData)
+        console.log("-----------------------------------------")
+        
         return savedData
     }
 

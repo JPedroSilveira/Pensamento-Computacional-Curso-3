@@ -25,11 +25,11 @@ class BaseScene extends Error {
     getUnitState = () => {
         AVAMECService.getIfNextUnitExist(this.state.id, this.callBackIfNextUnitExists)
         AVAMECService.getIfPreviousUnitExist(this.state.id, this.callBackIfPreviousUnitExists)
-        this.getUnitProgress()
+        this.getAndSaveUnitProgress()
     }
 
     onChangeSlide = newSlide => {
-        this.saveUnitAndSlideProgress(newSlide)
+        this.saveUnitAndSlideProgress(newSlide, this.state.slideProgres)
         SlideService.saveSlide(this.state.id, newSlide)
         URLService.updateSlide(newSlide)
         this.setState({
@@ -58,20 +58,32 @@ class BaseScene extends Error {
         }
     }
 
-    getUnitProgress = () => {
-        SlideService.getSlideProgress(this.state.id, this.getUnitProgressCallback)
+    getAndSaveUnitProgress = () => {
+        SlideService.getSlideProgress(this.state.id, this.getAndSaveUnitProgressCallback)
     }
 
-    getUnitProgressCallback = response => {
+    getAndSaveUnitProgressCallback = response => {
         let slideProgress = []
-        SlideService.closeGetSlideProgress(this.getUnitProgressCallback)
-        if(response.detail.status === 200){
+        SlideService.closeGetSlideProgress(this.getAndSaveUnitProgressCallback)
+
+        let unitData = []
+
+        if (response.detail.status === 200) {
+            const data = response.detail.data
+            const unitKey = SlideService.getSlideProgressId(this.state.id)
+            unitData = data.filter(unit => unit.chave === unitKey)
+            console.log(response)
+            console.log(unitData)
+        }
+        
+        if (unitData.length === 1) {
+            slideProgress = JSON.parse(unitData[0].valor)
             slideProgress = JSON.parse(response.detail.data[0].valor)
-        } else if(response.detail.status === 412) {
+        } else {
             for(let count = 1; count <= this.state.slideCount; count++) {
                 slideProgress.push({
                     slide: count,
-                    viewed: count === this.state.slide
+                    viewed: String(count) === this.state.slide
                 })
             }
             SlideService.firstSaveSlideProgress(this.state.id, slideProgress)
@@ -79,17 +91,37 @@ class BaseScene extends Error {
             AVAMECService.saveUnitProgress(this.state.id, (1 / this.state.slideCount) * 100)
         }
 
+        console.log("-----------------------------------------")
+        console.log("OnGetUnitProgress")
+        console.log("-----------------------------------------")
+        console.log("Response")
+        console.log(response)
+        console.log("SlideProgress")
+        console.log(slideProgress)
+        console.log("Slide: " + this.state.slide)
+        console.log("-----------------------------------------")
+
         this.setState({
             slideProgress: slideProgress
         })
     }
 
-    saveUnitAndSlideProgress = viewedSlide => {
+    saveUnitAndSlideProgress = (viewedSlide, slideProgress) => {
         const updatedSlideProgress = SlideService.saveSlideProgress(this.state.id, viewedSlide, this.state.slideProgress)
 
-        const countViewed = this.state.slideProgress.filter(item => item.viewed).length
+        const countViewed = updatedSlideProgress.filter(item => item.viewed).length
         
         AVAMECService.saveUnitProgress(this.state.id, (countViewed / this.state.slideCount) * 100)
+
+        console.log("-----------------------------------------")
+        console.log("OnSaveSlideProgress")
+        console.log("-----------------------------------------")
+        console.log("Unit Progress")
+        console.log((countViewed / this.state.slideCount) * 100)
+
+        console.log("SlideProgress")
+        console.log(updatedSlideProgress)
+        console.log("-----------------------------------------")
 
         this.setState({
             slideProgress: updatedSlideProgress
