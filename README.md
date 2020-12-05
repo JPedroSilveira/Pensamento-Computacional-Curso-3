@@ -1,1 +1,1 @@
-AVAMEC_Curso_Aplicacoes_do_Pensamento_Computacional
+Curso de Aplicações do Pensamento Computacional para a plataforma AVAMEC
